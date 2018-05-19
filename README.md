@@ -12,6 +12,9 @@
 *Rafael Antonio Damiani*  
 *Samuel*
 
+### Link Server Discord: 
+*https://discord.gg/DuPJShq*
+
 ### Boas práticas:
 - O nome das variáveis não devem ser abreviados.<br>
 Ex:<br>
