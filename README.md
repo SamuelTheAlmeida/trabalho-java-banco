@@ -23,6 +23,8 @@ Ex:<br>
  - Se fizer alguma alteração (funcionalidade, mudança da lógica) no código, inserir um comentário dizendo o que foi alterado e por quê.
  - Após terminar seu trabalho/período de codificação, **realizar push**
  - Os commits devem ser comentados com uma breve descrição do que foi feito
+ - Criar branch com o nome do que será implementado (Ex.: crud_cliente ou algo similar.)
+ - Seguir o padrão do Java: PascalCase pra classes, camelCase pra métodos e variáveis
 
 
  
