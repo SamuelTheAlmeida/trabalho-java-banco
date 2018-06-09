@@ -1,5 +1,7 @@
 public class ContaInvestimento extends Conta {
     public boolean deposita(double valor) {
+        valor = valor + super.getSaldo();
+
         if (valor >= depositoMinimo) {
             super.deposita(valor);
 
@@ -13,6 +15,8 @@ public class ContaInvestimento extends Conta {
 
 
     public boolean saca(double valor) {
+        valor = super.getSaldo() - valor;
+
         if (valor >= montanteMinimo) {
             super.saca(valor);
 
@@ -25,6 +29,8 @@ public class ContaInvestimento extends Conta {
     }
 
     public void remunera() {
+        double saldo = getSaldo() + ((getSaldo() / 100.0) * 2);
+        super.atualizaSaldo(saldo, idCliente);
         // Aplicar remuneração de 2% ao saldo da conta.
     }
 }

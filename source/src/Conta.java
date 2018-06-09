@@ -9,7 +9,6 @@ public class Conta {
             // To-do: Mensagem de erro
             return false;
         } else {
-            valor = valor + getSaldo();
             atualizaSaldo(valor, id);
             return true;
         }
@@ -20,7 +19,6 @@ public class Conta {
             // To-do: Mensagem de erro
             return false;
         } else {
-            valor = getSaldo() - valor;
             atualizaSaldo(valor, id);
             return true;
         }
