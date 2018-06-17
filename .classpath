@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry excluding="db/mysql-connector-java-8.0.11/src/main/protocol-impl/java/|db/mysql-connector-java-8.0.11/src/test/java/|db/mysql-connector-java-8.0.11/src/main/core-api/java/|db/mysql-connector-java-8.0.11/src/legacy/java/|db/mysql-connector-java-8.0.11/src/main/core-impl/java/|db/mysql-connector-java-8.0.11/src/main/user-api/java/|testeJDBC/src/|db/mysql-connector-java-8.0.11/src/main/user-impl/java/|source/src/|db/mysql-connector-java-8.0.11/src/generated/java/|db/mysql-connector-java-8.0.11/src/build/java/|db/mysql-connector-java-8.0.11/src/demo/java/" kind="src" path=""/>
+	<classpathentry kind="src" path="db/mysql-connector-java-8.0.11/src/build/java"/>
+	<classpathentry kind="src" path="db/mysql-connector-java-8.0.11/src/demo/java"/>
+	<classpathentry kind="src" path="db/mysql-connector-java-8.0.11/src/generated/java"/>
+	<classpathentry kind="src" path="db/mysql-connector-java-8.0.11/src/legacy/java"/>
+	<classpathentry kind="src" path="db/mysql-connector-java-8.0.11/src/main/core-api/java"/>
+	<classpathentry kind="src" path="db/mysql-connector-java-8.0.11/src/main/core-impl/java"/>
+	<classpathentry kind="src" path="db/mysql-connector-java-8.0.11/src/main/protocol-impl/java"/>
+	<classpathentry kind="src" path="db/mysql-connector-java-8.0.11/src/main/user-api/java"/>
+	<classpathentry kind="src" path="db/mysql-connector-java-8.0.11/src/main/user-impl/java"/>
+	<classpathentry kind="src" path="db/mysql-connector-java-8.0.11/src/test/java"/>
+	<classpathentry kind="src" path="source/src"/>
+	<classpathentry kind="src" path="testeJDBC/src"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
