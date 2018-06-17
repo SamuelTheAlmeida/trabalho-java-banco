@@ -20,6 +20,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class ClientesFrame extends JFrame {
 	private ModeloCliente modelo = new ModeloCliente();
@@ -28,12 +34,18 @@ public class ClientesFrame extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtNome;
 	private JTextField txtSobrenome;
+	private JComboBox comboSexo;
 	private JTextField txtRG;
 	private JTextField txtCPF;
 	private JTextField txtId;
 	private JTable table;
+	private JComboBox comboEstado;
 	private JTextField txtEndereco;
 	private JTextField txtCidade;
+	private JButton btnNovoCliente;
+	private JButton btnAdicionar;
+	private JButton btnRemover;
+	private JButton btnSalvar;
 
 	/**
 	 * Launch the application.
@@ -55,6 +67,14 @@ public class ClientesFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public ClientesFrame() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent arg0) {
+				System.out.println("abriu");
+				limparCampos();
+				txtId.setEditable(false);
+			}
+		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 731, 558);
 		contentPane = new JPanel();
@@ -124,6 +144,8 @@ public class ClientesFrame extends JFrame {
 		contentPane.add(txtEndereco);
 		
 		JScrollPane scrollPane = new JScrollPane();
+
+
 		scrollPane.setBounds(22, 214, 680, 297);
 		contentPane.add(scrollPane);
 		
@@ -132,7 +154,7 @@ public class ClientesFrame extends JFrame {
 		lblSexo.setBounds(22, 88, 46, 14);
 		contentPane.add(lblSexo);
 		
-		JComboBox comboSexo = new JComboBox();
+		comboSexo = new JComboBox();
 		comboSexo.setToolTipText("M");
 		comboSexo.setModel(new DefaultComboBoxModel(new String[] {"M", "F"}));
 		comboSexo.setBounds(77, 85, 53, 22);
@@ -143,9 +165,8 @@ public class ClientesFrame extends JFrame {
 		lblEstado.setBounds(22, 120, 46, 14);
 		contentPane.add(lblEstado);
 		
-		JComboBox comboEstado = new JComboBox();
-		comboEstado.setModel(new DefaultComboBoxModel(new String[] {"PR", "SP"}));
-		comboEstado.setToolTipText("M");
+		comboEstado = new JComboBox();
+		comboEstado.setModel(new DefaultComboBoxModel(new String[] {"AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"}));
 		comboEstado.setBounds(78, 116, 53, 22);
 		contentPane.add(comboEstado);
 		
@@ -165,13 +186,12 @@ public class ClientesFrame extends JFrame {
 		lblManterCliente.setBounds(22, 12, 680, 20);
 		contentPane.add(lblManterCliente);
 		
-		JButton btnAdicionar = new JButton("Adicionar");
+		btnAdicionar = new JButton("Cadastrar");
 		btnAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int id = Integer.parseInt(txtId.getText());
 				String nome = txtNome.getText();
 				String sobrenome = txtSobrenome.getText();
-				char sexo = comboSexo.getSelectedItem().toString().charAt(0);
+				char sexo = comboSexo.getSelectedItem().toString().toUpperCase().charAt(0);
 				String CPF = txtCPF.getText();
 				String RG = txtRG.getText();
 				String estado = comboEstado.getSelectedItem().toString();
@@ -185,7 +205,7 @@ public class ClientesFrame extends JFrame {
 		btnAdicionar.setBounds(22, 169, 91, 23);
 		contentPane.add(btnAdicionar);
 		
-		JButton btnRemover = new JButton("Remover");
+		btnRemover = new JButton("Remover");
 		btnRemover.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				modelo.remover(selecionado);
@@ -196,7 +216,7 @@ public class ClientesFrame extends JFrame {
 		contentPane.add(btnRemover);
 		
 		
-		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int id = Integer.parseInt(txtId.getText());
@@ -208,7 +228,7 @@ public class ClientesFrame extends JFrame {
 				String estado = comboEstado.getSelectedItem().toString();
 				String cidade = txtCidade.getText();
 				String endereco = txtEndereco.getText();
-				Cliente c = new Cliente(nome, sobrenome, sexo, CPF, RG, estado, cidade, endereco);
+				Cliente c = new Cliente(id, nome, sobrenome, sexo, CPF, RG, estado, cidade, endereco);
 				int index = table.getSelectedRow();
 				modelo.atualizar(index, c);
 				limparCampos();
@@ -220,33 +240,61 @@ public class ClientesFrame extends JFrame {
 
 		
 		table = new JTable();
+
 		scrollPane.setViewportView(table);
 		table.setFillsViewportHeight(true);
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				btnAdicionar.setEnabled(false);
+				btnSalvar.setEnabled(true);
+				btnRemover.setEnabled(true);
 				Cliente c = modelo.getCliente(table.getSelectedRow());
 				txtId.setText(Integer.toString(c.getId()));
 				txtNome.setText(c.getNome());
 				txtSobrenome.setText(c.getSobrenome());
+				comboSexo.setSelectedItem(String.valueOf(c.getSexo()));
 				txtCPF.setText(c.getCpf());
 				txtRG.setText(c.getRg());
+				comboEstado.setSelectedItem(c.getEstado());
+				txtCidade.setText(c.getCidade());
 				txtEndereco.setText(c.getEndereco());
 				selecionado = c;
 			}
+
 		});
 		table.setModel(modelo);
 		table.setBorder(new CompoundBorder());
+		
+		btnNovoCliente = new JButton("Novo Cliente");
+		btnNovoCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				limparCampos();
+				btnSalvar.setEnabled(false);
+				btnRemover.setEnabled(false);
+				btnAdicionar.setEnabled(true);
+			}
+		});
+		btnNovoCliente.setBounds(349, 169, 119, 23);
+		contentPane.add(btnNovoCliente);
 		
 
 	}
 	
 	public void limparCampos() {
-		txtId.setText("");
+		btnAdicionar.setEnabled(true);
+		btnSalvar.setEnabled(true);
+		btnRemover.setEnabled(true);
+		btnNovoCliente.setEnabled(true);
+		int id = table.getRowCount()+1;
+		txtId.setText(String.valueOf(id));
 		txtNome.setText("");
 		txtSobrenome.setText("");
+		comboSexo.setSelectedIndex(0);
 		txtCPF.setText("");
 		txtRG.setText("");
+		comboEstado.setSelectedIndex(0);
+		txtCidade.setText("");
 		txtEndereco.setText("");
 	}
 }

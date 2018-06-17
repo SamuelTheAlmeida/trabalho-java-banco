@@ -6,7 +6,8 @@ import java.util.ArrayList;
 // Modificar as funções de adicionar, remover e atualizar para utilização do Banco de Dados
 
 public class ModeloCliente extends AbstractTableModel {
-	private List<Cliente> clientes = new ArrayList();
+	private List<Cliente> clientes = Cliente.buscarClientes();
+	private static int qtdColunas = 9; // num de colunas da tabela cliente
 	
 	public Cliente getCliente(int row) {
 		return clientes.get(row);
@@ -14,7 +15,7 @@ public class ModeloCliente extends AbstractTableModel {
 	
 	@Override
 	public int getColumnCount() {
-		return 6;
+		return qtdColunas;
 	}
 
 	@Override
@@ -33,10 +34,16 @@ public class ModeloCliente extends AbstractTableModel {
 		case 2:
 			return cliente.getSobrenome();
 		case 3:
-			return cliente.getCpf();
+			return cliente.getSexo();
 		case 4:
-			return cliente.getRg();
+			return cliente.getCpf();
 		case 5:
+			return cliente.getRg();
+		case 6:
+			return cliente.getEstado();
+		case 7:
+			return cliente.getCidade();
+		case 8:
 			return cliente.getEndereco();
 		default:
 			return "";
@@ -44,16 +51,19 @@ public class ModeloCliente extends AbstractTableModel {
 	}
 	
 	public void adicionar(Cliente cliente) {
+		Cliente.adicionarCliente(cliente);
 		clientes.add(cliente);
 		fireTableRowsInserted(clientes.size()-1, clientes.size()-1);
 	}
 	
 	public void remover(Cliente cliente) {
+		Cliente.excluirCliente(cliente.getId());
 		clientes.remove(cliente);
 		fireTableRowsDeleted(clientes.size()-1, clientes.size()-1);
 	}
 	
 	public void atualizar(int index, Cliente cliente) {
+		Cliente.atualizarCliente(cliente);
 		clientes.set(index, cliente);
 		fireTableRowsUpdated(clientes.size()-1, clientes.size()-1);
 		fireTableDataChanged();
@@ -69,10 +79,16 @@ public class ModeloCliente extends AbstractTableModel {
 		case 2:
 			return "Sobrenome";
 		case 3:
-			return "CPF";
+			return "Sexo";
 		case 4:
-			return "RG";
+			return "CPF";
 		case 5:
+			return "RG";
+		case 6:
+			return "Estado";
+		case 7:
+			return "Cidade";
+		case 8:
 			return "Endereco";
 		default:
 			return "";
