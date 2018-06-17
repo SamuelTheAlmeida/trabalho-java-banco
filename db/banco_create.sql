@@ -23,6 +23,7 @@ CREATE TABLE Conta (
     tipoConta INT NOT NULL,
     cliente INT NOT NULL,
     saldo DECIMAL(11,2) DEFAULT 0.00,
+    depositoInicial DECIMAL(11, 2) NOT NULL,
     FOREIGN KEY (cliente) REFERENCES Cliente(idCliente),
     FOREIGN KEY (tipoConta) REFERENCES TiposConta(idTipoConta)
 );
