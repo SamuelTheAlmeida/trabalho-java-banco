@@ -36,10 +36,28 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     }
 
     public int getNumero(){
-        //isso provavelmente vai vir do front, onde o cara vai selecionar qual
-        //conta ele quer a partir da listagem
-    	return 0;
+        return this.idConta;
     }
+    
+    public static int getNumeracaoConta() {
+    	Connection con = Conexao.getConexaoMySQL();
+    	int numeracaoConta = 0;
+    	try {
+        	Statement stm = con.createStatement();
+        	ResultSet rs = stm.executeQuery("SELECT MAX(idConta) FROM Conta");
+        	while (rs.next()) {
+        		numeracaoConta = rs.getInt(1)+1;
+        	}
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    	return numeracaoConta;
+    } 
+    
+    public void setDono(Cliente cliente) {
+    	this.cliente = cliente;
+    }
+    
 
     public Cliente getDono(){
     	Connection con = Conexao.getConexaoMySQL();
@@ -112,6 +130,10 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
 	
 	public void setIdConta(int idConta) {
 		this.idConta = idConta;
+	}
+	
+	public double getDepositoInicial() {
+		return this.depositoInicial;
 	}
 	
 	public void setDepositoInicial(double depositoInicial) {

@@ -4,7 +4,14 @@ public class ContaInvestimento extends Conta {
 	private double montanteMinimo;
 	private double depositoMinimo;
 	
-	
+	public double getMontanteMinimo() {
+		return montanteMinimo;
+	}
+
+	public double getDepositoMinimo() {
+		return depositoMinimo;
+	}
+
 	public ContaInvestimento(int idConta, TipoConta tipoConta, double montanteMinimo, 
 			double depositoMinimo, double depositoInicial) {
 		super.setIdConta(idConta);
@@ -12,8 +19,29 @@ public class ContaInvestimento extends Conta {
 		super.setDepositoInicial(depositoInicial);
 		this.montanteMinimo = montanteMinimo;
 		this.depositoMinimo = depositoMinimo;
-		
 	}
+	
+	public static void CriaContaInvestimento(ContaInvestimento c) {
+	Connection con = Conexao.getConexaoMySQL();
+	try {
+		PreparedStatement stm = con.prepareStatement("INSERT INTO Conta(idConta, tipoConta, cliente, depositoInicial) "
+				+ "VALUES (?, ?, ?, ?)");
+		stm.setInt(1, c.getNumero());
+		stm.setInt(2, c.getTipoConta().getIdTipoConta());
+		stm.setInt(3, c.getCliente().getId());
+		stm.setDouble(4, c.getDepositoInicial());
+		stm.executeUpdate();
+		stm = con.prepareStatement("INSERT INTO ContaInvestimento(idConta, montanteMinimo, depositoMinimo)"
+				+ "VALUES(?, ?, ?)");
+		stm.setInt(1, c.getNumero());
+		stm.setDouble(2, c.getMontanteMinimo());
+		stm.setDouble(3, c.getDepositoMinimo());
+		stm.executeUpdate();
+	} catch (SQLException e) {
+		System.out.println("erro ao criar conta investimento no BD");
+		e.printStackTrace();
+	}
+}
 	
 	@Override
     public boolean deposita(double valor) {

@@ -70,7 +70,6 @@ public class Cliente {
     	} catch (SQLException e) {
     		System.out.println("deu ruim ao buscar clientes");
     	}
-    	
     	return clientes;
     }
     
@@ -144,8 +143,30 @@ public class Cliente {
 
     }
 
-    public void consultarCliente() {
-
+    public static Cliente consultarCliente(int id) {
+    	Connection con = Conexao.getConexaoMySQL();
+    	Statement stm = null;
+    	Cliente c = null;
+    	try {
+    		stm = con.createStatement();
+        	ResultSet rs = stm.executeQuery("SELECT idCliente, nome, sobrenome, sexo, rg, cpf, estado, cidade, endereco "
+    				+ "FROM Cliente WHERE idCliente = " + id);
+        	while (rs.next()) {
+        		String nome = rs.getString(2);
+        		String sobrenome = rs.getString(3);
+        		char sexo = rs.getString(4).charAt(0);
+        		String rg = rs.getString(5);
+        		String cpf = rs.getString(6); 
+        		String estado = rs.getString(7);
+        		String cidade = rs.getString(8);
+        		String endereco = rs.getString(9);
+        		c = new Cliente(id, nome, sobrenome, sexo, rg, cpf, estado, cidade, endereco);
+        	}
+    	} catch (SQLException e) {
+    		System.out.println("deu ruim ao consultar cliente");
+    	}
+    	
+    	return c;
     }
 
 	   /** 
