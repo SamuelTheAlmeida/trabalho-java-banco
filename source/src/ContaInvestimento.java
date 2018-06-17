@@ -15,11 +15,13 @@ public class ContaInvestimento extends Conta {
 		
 	}
 	
-    public boolean deposita(Connection con, double valor) {
-        valor = valor + super.getSaldo(con);
+	@Override
+    public boolean deposita(double valor) {
+    	Connection con = Conexao.getConexaoMySQL();
+        valor = valor + super.getSaldo();
 
         if (valor >= depositoMinimo) {
-            super.deposita(con, valor);
+            super.deposita(valor);
 
             return true;
         } else {
@@ -29,12 +31,12 @@ public class ContaInvestimento extends Conta {
         }
     }
 
-
-    public boolean saca(Connection con, double valor) {
-        valor = super.getSaldo(con) - valor;
-
+    @Override
+    public boolean saca(double valor) {
+    	Connection con = Conexao.getConexaoMySQL();
+        valor = super.getSaldo() - valor;
         if (valor >= montanteMinimo) {
-            super.saca(con, valor);
+            super.saca(valor);
 
             return true;
         } else {
@@ -44,9 +46,28 @@ public class ContaInvestimento extends Conta {
         }
     }
 
-    public void remunera(Connection con) {
-        double saldo = getSaldo(con) + ((getSaldo(con) / 100.0) * 2);
-        super.atualizaSaldo(con, saldo, super.getCliente().getId());
+    @Override
+    public void remunera() {
+    	Connection con = Conexao.getConexaoMySQL();
+        double saldo = getSaldo() + ((getSaldo() / 100.0) * 2);
+        super.atualizaSaldo(saldo, super.getCliente().getId());
         // Aplicar remuneração de 2% ao saldo da conta.
     }
+
+	@Override
+	public Cliente getDono() {
+		return super.getDono();
+	}
+
+	@Override
+	public int getNumero() {
+		return super.getNumero();
+	}
+
+	@Override
+	public double getSaldo() {
+		return super.getSaldo();
+	}
+
+
 }

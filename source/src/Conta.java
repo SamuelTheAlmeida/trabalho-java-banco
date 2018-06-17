@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public abstract class Conta { // classe abstrata, conta precisa ser corrente ou investimento
+public abstract class Conta implements ContaI { // classe abstrata, conta precisa ser corrente ou investimento
     private int idConta;
 
     private TipoConta tipoConta; 
@@ -13,33 +13,36 @@ public abstract class Conta { // classe abstrata, conta precisa ser corrente ou 
     private double depositoInicial;
     
 
-    public boolean deposita(Connection con, double valor) {
+    public boolean deposita(double valor) {
+    	Connection con = Conexao.getConexaoMySQL();
         if(valor < 1) {
             // To-do: Mensagem de erro
             return false;
         } else {
-            atualizaSaldo(con, valor, this.idConta);
+            atualizaSaldo(valor, this.idConta);
             return true;
         }
     }
 
-    public boolean saca(Connection con, double valor) {
+    public boolean saca(double valor) {
+    	Connection con = Conexao.getConexaoMySQL();
         if(valor < 1) {
             // To-do: Mensagem de erro
             return false;
         } else {
-            atualizaSaldo(con, valor, this.idConta);
+            atualizaSaldo(valor, this.idConta);
             return true;
         }
     }
 
-    public int getNumero(int id){
+    public int getNumero(){
         //isso provavelmente vai vir do front, onde o cara vai selecionar qual
         //conta ele quer a partir da listagem
     	return 0;
     }
 
-    public Cliente getDono(Connection con){
+    public Cliente getDono(){
+    	Connection con = Conexao.getConexaoMySQL();
         Statement stmt = null;
         int idCliente = cliente.getId();
         String query = "select nome, sobrenome, rg, cpf, sexo, estado, cidade, endereco from cliente, conta where cliente.idCliente =" + idCliente;
@@ -64,8 +67,8 @@ public abstract class Conta { // classe abstrata, conta precisa ser corrente ou 
         }
     }
 
-    public boolean atualizaSaldo(Connection con, double valor, int id){
-      // Fazer Try-catch aqui
+    public boolean atualizaSaldo(double valor, int id){
+    	Connection con = Conexao.getConexaoMySQL();
     	try {
             String insertTableSQL = "UPDATE conta SET saldo = ? where idConta = ?";
             PreparedStatement preparedStatement = con.prepareStatement(insertTableSQL);
@@ -80,10 +83,8 @@ public abstract class Conta { // classe abstrata, conta precisa ser corrente ou 
 
     }
 
-    // método da conta investimento
-    //public abstract void remunera();
-
-    public double getSaldo(Connection con){
+    public double getSaldo() {
+    	Connection con = Conexao.getConexaoMySQL();
     	try {
             Statement stmt = null;
             String query = "select saldo from conta where idConta =" + this.cliente.getId();

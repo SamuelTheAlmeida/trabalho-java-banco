@@ -10,22 +10,47 @@ public class ContaCorrente extends Conta {
 		super.setDepositoInicial(depositoInicial);
 		this.limite = limite;
 	}
-	
-    public boolean saca(Connection con, double valor) {
-      valor = super.getSaldo(con) - valor;
+
+	@Override
+    public boolean saca(double valor) {
+    	Connection con = Conexao.getConexaoMySQL();
+    	valor = super.getSaldo() - valor;
         if (valor > limite) {
             // To-do: Mensagem de erro;
             return false;
         } else {
-            super.saca(con, valor);
+            super.saca(valor);
             // To-do: decrementa, limite - valor;
             return true;
         }
     }
-
-    public void remunera(Connection con) {
-        double saldo = getSaldo(con) + (getSaldo(con) / 100.0);
+    
+    @Override
+    public void remunera() {
+    	Connection con = Conexao.getConexaoMySQL();
+        double saldo = getSaldo() + (getSaldo() / 100.0);
         // Aplicar remuneração de 1% ao saldo da conta.
-        super.atualizaSaldo(con, saldo, super.getCliente().getId());
+        super.atualizaSaldo(saldo, super.getCliente().getId());
     }
+
+	@Override
+	public boolean deposita(double valor) {
+		return super.deposita(valor);
+	}
+
+	@Override
+	public Cliente getDono() {
+		return super.getDono();
+	}
+
+	@Override
+	public int getNumero() {
+		return super.getNumero();
+	}
+
+	@Override
+	public double getSaldo() {
+		return super.getSaldo();
+	}
+
 }
