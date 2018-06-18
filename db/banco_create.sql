@@ -10,7 +10,9 @@ CREATE TABLE Cliente (
     sexo CHAR(1) NOT NULL,
     estado CHAR(2) NOT NULL,
     cidade VARCHAR(35) NOT NULL,
-    endereco VARCHAR(35) NOT NULL
+    endereco VARCHAR(35) NOT NULL,
+    idConta INT,
+    FOREIGN KEY (idConta) REFERENCES Conta(idConta)
 );
 
 CREATE TABLE TiposConta (
