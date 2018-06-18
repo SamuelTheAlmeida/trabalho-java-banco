@@ -11,6 +11,7 @@ public class Cliente {
     private String estado;
     private String cidade;
     private String endereco;
+    private int idConta;
     
 
 	   /** 
@@ -53,7 +54,7 @@ public class Cliente {
     	Connection con = Conexao.getConexaoMySQL();
     	try {
     		Statement stm = con.createStatement();
-        	ResultSet rs = stm.executeQuery("SELECT idCliente, nome, sobrenome, sexo, rg, cpf, estado, cidade, endereco FROM Cliente");
+        	ResultSet rs = stm.executeQuery("SELECT idCliente, nome, sobrenome, sexo, cpf, rg, estado, cidade, endereco FROM Cliente");
         	while (rs.next()) {
         		int id = rs.getInt(1);
         		String nome = rs.getString(2);
@@ -168,6 +169,33 @@ public class Cliente {
     	
     	return c;
     }
+    
+    public static Cliente consultarCliente(String cpf) {
+    	Connection con = Conexao.getConexaoMySQL();
+    	Statement stm = null;
+    	Cliente c = null;
+    	try {
+    		stm = con.createStatement();
+        	ResultSet rs = stm.executeQuery("SELECT idCliente, nome, sobrenome, sexo, rg, cpf, estado, cidade, endereco "
+    				+ "FROM Cliente WHERE cpf = " + cpf);
+        	while (rs.next()) {
+        		int id = rs.getInt(1);
+        		String nome = rs.getString(2);
+        		String sobrenome = rs.getString(3);
+        		char sexo = rs.getString(4).charAt(0);
+        		String rg = rs.getString(5);
+        		String estado = rs.getString(7);
+        		String cidade = rs.getString(8);
+        		String endereco = rs.getString(9);
+        		c = new Cliente(id, nome, sobrenome, sexo, rg, cpf, estado, cidade, endereco);
+        	}
+    	} catch (SQLException e) {
+    		System.out.println("Erro ao consultar cliente");
+    		e.printStackTrace();
+    	}
+    	
+    	return c;
+    }
 
 	   /** 
 	    * Método para excluir um cliente do Banco de Dados, através de seu ID.
@@ -183,6 +211,7 @@ public class Cliente {
     		e.printStackTrace();
     	}
     }
+    
     
     public int getId() {
     	return this.id;
@@ -223,8 +252,23 @@ public class Cliente {
 	public void setId(int id) {
 		this.id = id;
 	}
-    
-    
-    
-    
+
+	public int getIdConta() {
+		return idConta;
+	}
+
+	public void setIdConta(int idConta) {
+		Connection con = Conexao.getConexaoMySQL();
+		try {
+			PreparedStatement stm = con.prepareStatement("UPDATE Cliente SET idConta = ? WHERE idCliente = ?");
+			stm.setInt(1, idConta);
+			stm.setInt(2, this.id);
+			stm.executeUpdate();
+			this.idConta = idConta;
+		} catch(SQLException e) {
+			System.out.println("Erro ao vincular conta");
+			e.printStackTrace();
+		}
+		
+	}
 }

@@ -14,11 +14,13 @@ public class ContaInvestimento extends Conta {
 
 	public ContaInvestimento(int idConta, TipoConta tipoConta, double montanteMinimo, 
 			double depositoMinimo, double depositoInicial) {
-		super.setIdConta(idConta);
-		super.setTipoConta(tipoConta);
-		super.setDepositoInicial(depositoInicial);
+		super(idConta, tipoConta, depositoInicial);
 		this.montanteMinimo = montanteMinimo;
 		this.depositoMinimo = depositoMinimo;
+	}
+	
+	public ContaInvestimento(int idConta, TipoConta tipoConta, Cliente clienteConta, double saldo, double depositoInicial) {
+		super(idConta, tipoConta, clienteConta, saldo, depositoInicial);
 	}
 	
 	public static void CriaContaInvestimento(ContaInvestimento c) {

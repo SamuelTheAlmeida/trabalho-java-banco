@@ -12,6 +12,20 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     private double saldo;
     private double depositoInicial;
     
+    public Conta(int idConta, TipoConta tipo, Cliente cliente, double saldo, double depositoInicial) {
+    	this.idConta = idConta;
+    	this.tipoConta = tipo;
+    	this.cliente = cliente;
+    	this.saldo = saldo;
+    	this.depositoInicial = depositoInicial;
+    }
+    
+    public Conta(int idConta, TipoConta tipoConta, double depositoInicial) {
+    	this.idConta = idConta;
+    	this.tipoConta = tipoConta;
+    	this.depositoInicial = depositoInicial;
+    }
+
 
     public boolean deposita(double valor) {
     	Connection con = Conexao.getConexaoMySQL();
@@ -25,13 +39,12 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     }
 
     public boolean saca(double valor) {
-    	Connection con = Conexao.getConexaoMySQL();
         if(valor < 1) {
             // To-do: Mensagem de erro
             return false;
         } else {
-            atualizaSaldo(valor, this.idConta);
-            return true;
+        	atualizaSaldo(valor, this.idConta);
+        	return true;
         }
     }
 
@@ -84,18 +97,58 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
         	return null;
         }
     }
+    
+    public static Conta consultarConta(Cliente cliente) {
+    	Connection con = Conexao.getConexaoMySQL();
+		 int idConta = 0;
+		 int idTipo = 0;
+		 TipoConta tipoConta = null;
+		 int idCliente = 0;
+		 Cliente clienteConta = null;
+		 double saldo = 0;
+		 double depositoInicial = 0;
+		 Conta conta = null;
+		 
+    	try {
+    		Statement stm = con.createStatement();
+    		ResultSet rs = stm.executeQuery("SELECT idConta, tipoConta, cliente, saldo, depositoInicial"
+    				+ " FROM Conta WHERE cliente = " + cliente.getId());
+    		 while (rs.next()) {
+    			 idConta = rs.getInt(1);
+    			 idTipo = rs.getInt(2);
+    			 tipoConta = TipoConta.consultarTipoConta(idTipo);
+    			 idCliente = rs.getInt(3);
+    			 clienteConta = Cliente.consultarCliente(idCliente);
+    			 saldo = rs.getDouble(4);
+    			 depositoInicial = rs.getDouble(5);
+    		 }
+    		 switch (idTipo) {
+    		 case 1:
+    			 conta = new ContaCorrente(idConta, tipoConta, clienteConta, saldo, depositoInicial);
+    			 break;
+    		 case 2:
+    			 conta = new ContaInvestimento(idConta, tipoConta, clienteConta, saldo, depositoInicial);
+    			 break;
+    		 }
+    	} catch (SQLException e) {
+    		System.out.println("Erro ao consultar cliente: " + e.getMessage());
+    	}
+    	return conta;
+    }
 
     public boolean atualizaSaldo(double valor, int id){
     	Connection con = Conexao.getConexaoMySQL();
     	try {
-            String insertTableSQL = "UPDATE conta SET saldo = ? where idConta = ?";
-            PreparedStatement preparedStatement = con.prepareStatement(insertTableSQL);
+            String query = "UPDATE Conta SET saldo = ? where idConta = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
             preparedStatement.setDouble(1, valor);
             preparedStatement.setInt(2, id);
 
             preparedStatement.executeUpdate();
             return true;		
     	} catch (SQLException e) {
+    		System.out.println(e.getMessage());
+    		e.printStackTrace();
     		return false;
     	}
 
@@ -103,17 +156,19 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
 
     public double getSaldo() {
     	Connection con = Conexao.getConexaoMySQL();
+    	double saldo = -1;
     	try {
             Statement stmt = null;
             String query = "select saldo from conta where idConta =" + this.cliente.getId();
-
             stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            double saldo = rs.getDouble("saldo");
-            return saldo;    		
+            while (rs.next()) {
+            	saldo = rs.getDouble("saldo");
+            }
     	} catch (SQLException e) {
-    		return -1;
+    		e.printStackTrace();
     	}
+    	return saldo;  
     }
     
     public Cliente getCliente() {

@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
@@ -15,6 +17,10 @@ import java.awt.event.ActionEvent;
 public class ManipularContaFrame extends JFrame {
 
 	private JPanel contentPane;
+	private String cpfClienteSelecionado;
+	private Cliente clienteSelecionado;
+	private JLabel lblCpfDoCliente;
+	private Conta contaSelecionada;
 
 	/**
 	 * Launch the application.
@@ -43,14 +49,56 @@ public class ManipularContaFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		lblCpfDoCliente = new JLabel("CPF do Cliente");
+		lblCpfDoCliente.setBounds(49, 79, 107, 14);
+		contentPane.add(lblCpfDoCliente);
+		
+		JButton btnSaque = new JButton("Saque");
+		btnSaque.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String input = JOptionPane.showInputDialog("Digite o valor a ser sacado: ");
+				double valor = Double.parseDouble(input);
+				//a
+				contaSelecionada.saca(valor);
+			}
+		});
+		btnSaque.setBounds(68, 138, 123, 23);
+		contentPane.add(btnSaque);
+		
+		JButton btnDeposito = new JButton("Dep\u00F3sito");
+		btnDeposito.setBounds(227, 138, 123, 23);
+		contentPane.add(btnDeposito);
+		
+		JButton btnVerSaldo = new JButton("Saldo Atual");
+		btnVerSaldo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				double saldo = contaSelecionada.getSaldo();
+				JOptionPane.showMessageDialog(getParent(), "Saldo atual é de " + saldo);
+			}
+		});
+		btnVerSaldo.setBounds(68, 172, 123, 23);
+		contentPane.add(btnVerSaldo);
+		
+		JButton btnRemunerar = new JButton("Remunerar");
+		btnRemunerar.setBounds(227, 172, 123, 23);
+		contentPane.add(btnRemunerar);
+		
+		JLabel lblNomeCliente = new JLabel("");
+		lblNomeCliente.setBounds(137, 107, 233, 14);
+		contentPane.add(lblNomeCliente);
+		
 		JLabel lblGerenciarConta = new JLabel("Gerenciar Conta");
 		lblGerenciarConta.setFont(new Font("Tw Cen MT", Font.PLAIN, 18));
-		lblGerenciarConta.setBounds(137, 11, 123, 54);
+		lblGerenciarConta.setBounds(154, 11, 123, 54);
 		contentPane.add(lblGerenciarConta);
 		
 		JComboBox comboCpfCliente = new JComboBox();
 		comboCpfCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				cpfClienteSelecionado = (String)comboCpfCliente.getSelectedItem();
+				clienteSelecionado = Cliente.consultarCliente(cpfClienteSelecionado);
+				lblNomeCliente.setText(clienteSelecionado.getNome() + " " + clienteSelecionado.getSobrenome());
+				contaSelecionada = Conta.consultarConta(clienteSelecionado);
 			}
 		});
 		
@@ -62,24 +110,6 @@ public class ManipularContaFrame extends JFrame {
 		comboCpfCliente.setBounds(136, 76, 234, 20);
 		contentPane.add(comboCpfCliente);
 		
-		JLabel lblCpfDoCliente = new JLabel("CPF do Cliente");
-		lblCpfDoCliente.setBounds(49, 79, 107, 14);
-		contentPane.add(lblCpfDoCliente);
-		
-		JButton btnSaque = new JButton("Saque");
-		btnSaque.setBounds(102, 138, 89, 23);
-		contentPane.add(btnSaque);
-		
-		JButton btnDeposito = new JButton("Dep\u00F3sito");
-		btnDeposito.setBounds(227, 138, 89, 23);
-		contentPane.add(btnDeposito);
-		
-		JButton btnVerSaldo = new JButton("Saldo Atual");
-		btnVerSaldo.setBounds(102, 172, 89, 23);
-		contentPane.add(btnVerSaldo);
-		
-		JButton btnRemunerar = new JButton("Remunerar");
-		btnRemunerar.setBounds(227, 172, 89, 23);
-		contentPane.add(btnRemunerar);
+
 	}
 }

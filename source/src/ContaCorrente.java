@@ -9,10 +9,12 @@ public class ContaCorrente extends Conta {
 
 	public ContaCorrente(int idConta, TipoConta tipoConta, 
 		double depositoInicial, double limite) {
-		super.setIdConta(idConta);
-		super.setTipoConta(tipoConta);
-		super.setDepositoInicial(depositoInicial);
+		super(idConta, tipoConta, depositoInicial);
 		this.limite = limite;
+	}
+	
+	public ContaCorrente(int idConta, TipoConta tipoConta, Cliente clienteConta, double saldo, double depositoInicial) {
+		super(idConta, tipoConta, clienteConta, saldo, depositoInicial);
 	}
 	
 	public static void CriaContaCorrente(ContaCorrente c) {
@@ -26,7 +28,7 @@ public class ContaCorrente extends Conta {
 		stm.setDouble(4, c.getDepositoInicial());
 		stm.executeUpdate();
 		stm = con.prepareStatement("INSERT INTO ContaCorrente(idConta, limite)"
-				+ "VALUES(?, ?, ?)");
+				+ "VALUES(?, ?)");
 		stm.setInt(1, c.getNumero());
 		stm.setDouble(2, c.getLimite());
 		stm.executeUpdate();
