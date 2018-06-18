@@ -12,6 +12,9 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     private double saldo;
     private double depositoInicial;
     
+	   /** 
+	    * Construtor de uma conta com saldo definido
+	    */
     public Conta(int idConta, TipoConta tipo, Cliente cliente, double saldo, double depositoInicial) {
     	this.idConta = idConta;
     	this.tipoConta = tipo;
@@ -19,32 +22,44 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     	this.saldo = saldo;
     	this.depositoInicial = depositoInicial;
     }
-    
-    public Conta(int idConta, TipoConta tipoConta, double depositoInicial) {
+   
+	   /** 
+	    * Construtor de uma conta sem saldo definido
+	    */
+    public Conta(int idConta, TipoConta tipoConta, Cliente clienteConta, double depositoInicial) {
     	this.idConta = idConta;
     	this.tipoConta = tipoConta;
+    	this.cliente = clienteConta;
     	this.depositoInicial = depositoInicial;
     }
 
 
+	   /** 
+	    * Método de depósito (sobrescrito nas classes filhas CC e CI)
+	    * @param valor do depósito
+	    * @return true ou joga exceção (para tratamento de erro específico)
+	    */
     public boolean deposita(double valor) {
-    	Connection con = Conexao.getConexaoMySQL();
         if(valor < 1) {
-            // To-do: Mensagem de erro
-            return false;
+        	throw new RuntimeException("Valor do deposito precisa ser positivo");
         } else {
-            atualizaSaldo(valor, this.idConta);
+            atualizaSaldo(valor+getSaldo(), this.idConta);
             return true;
         }
     }
 
+	   /** 
+	    * Método de saque (sobrescrito nas classes filhas CC e CI)
+	    * @param valor do saque
+	    * @return true ou joga exceção (para tratamento de erro específico)
+	    */    
     public boolean saca(double valor) {
+    	double valorFinal = getSaldo()-valor;
         if(valor < 1) {
-            // To-do: Mensagem de erro
-            return false;
+        	throw new RuntimeException("Valor do saque precisa ser positivo");
         } else {
-        	atualizaSaldo(valor, this.idConta);
-        	return true;
+            atualizaSaldo(valorFinal, this.idConta);
+            return true;
         }
     }
 
@@ -52,6 +67,10 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
         return this.idConta;
     }
     
+	   /** 
+	    * Método para obter o próximo valor de número de conta disponível para uso
+	    * @return inteiro com o número da conta
+	    */  
     public static int getNumeracaoConta() {
     	Connection con = Conexao.getConexaoMySQL();
     	int numeracaoConta = 0;
@@ -71,7 +90,10 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     	this.cliente = cliente;
     }
     
-
+	   /** 
+	    * Método para consultar o dono da conta
+	    * @return Objeto cliente vinculado à conta
+	    */  
     public Cliente getDono(){
     	Connection con = Conexao.getConexaoMySQL();
         Statement stmt = null;
@@ -98,6 +120,11 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
         }
     }
     
+	   /** 
+	    * Método para consultar uma conta específica através de um cliente
+	    * @param cliente para consultar
+	    * @return Objeto conta
+	    */  
     public static Conta consultarConta(Cliente cliente) {
     	Connection con = Conexao.getConexaoMySQL();
 		 int idConta = 0;
@@ -108,6 +135,7 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
 		 double saldo = 0;
 		 double depositoInicial = 0;
 		 Conta conta = null;
+		 double limite = 0;
 		 
     	try {
     		Statement stm = con.createStatement();
@@ -122,9 +150,14 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     			 saldo = rs.getDouble(4);
     			 depositoInicial = rs.getDouble(5);
     		 }
+     		stm = con.createStatement();
+     		rs = stm.executeQuery("SELECT limite FROM ContaCorrente WHERE idConta = " + cliente.getId());
+     		 while (rs.next()) {
+     			 limite = rs.getInt(1);
+     		 }
     		 switch (idTipo) {
     		 case 1:
-    			 conta = new ContaCorrente(idConta, tipoConta, clienteConta, saldo, depositoInicial);
+    			 conta = new ContaCorrente(idConta, tipoConta, clienteConta, depositoInicial, limite);
     			 break;
     		 case 2:
     			 conta = new ContaInvestimento(idConta, tipoConta, clienteConta, saldo, depositoInicial);
@@ -136,24 +169,32 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     	return conta;
     }
 
+	   /** 
+	    * Método para atualização de saldo (utilizado em saque, depósito, remuneração)
+	    * @param valor do saque
+	    * @param id da Conta
+	    * @return true ou false de acordo com o retorno da query
+	    */  
     public boolean atualizaSaldo(double valor, int id){
     	Connection con = Conexao.getConexaoMySQL();
     	try {
-            String query = "UPDATE Conta SET saldo = ? where idConta = ?";
-            PreparedStatement preparedStatement = con.prepareStatement(query);
-            preparedStatement.setDouble(1, valor);
-            preparedStatement.setInt(2, id);
-
-            preparedStatement.executeUpdate();
+            PreparedStatement stm = con.prepareStatement("UPDATE Conta SET saldo = ? where idConta = ?");
+            stm.setDouble(1, valor);
+            stm.setInt(2, id);
+            stm.executeUpdate();
+            this.saldo = valor;
             return true;		
     	} catch (SQLException e) {
     		System.out.println(e.getMessage());
     		e.printStackTrace();
     		return false;
     	}
-
     }
 
+	   /** 
+	    * Método para obter o saldo atual no banco de dados
+	    * @return valor do saldo
+	    */  
     public double getSaldo() {
     	Connection con = Conexao.getConexaoMySQL();
     	double saldo = -1;
@@ -170,6 +211,8 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     	}
     	return saldo;  
     }
+    
+    /* getters e setters */
     
     public Cliente getCliente() {
     	return this.cliente;

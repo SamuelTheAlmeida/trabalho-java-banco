@@ -202,7 +202,7 @@ public class VincularContaFrame extends JFrame {
 				case 1:
 					double limite = Double.parseDouble(txtLimite.getText());
 					ContaCorrente contaCorrente = new ContaCorrente(numConta, tipoConta, 
-							depositoInicial, limite);
+							cliente, depositoInicial, limite);
 					contaCorrente.setDono(cliente);
 					ContaCorrente.CriaContaCorrente(contaCorrente);
 					cliente.setIdConta(numConta);
@@ -210,7 +210,7 @@ public class VincularContaFrame extends JFrame {
 				case 2:
 					double montanteMinimo = Double.parseDouble(txtMontanteMinimo.getText());
 					double depositoMinimo = Double.parseDouble(txtDepositoMinimo.getText());
-					ContaInvestimento contaInvestimento = new ContaInvestimento(numConta, tipoConta, montanteMinimo, 
+					ContaInvestimento contaInvestimento = new ContaInvestimento(numConta, tipoConta, cliente, montanteMinimo, 
 							depositoMinimo, depositoInicial);
 					contaInvestimento.setDono(cliente);
 					ContaInvestimento.CriaContaInvestimento(contaInvestimento);

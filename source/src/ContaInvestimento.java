@@ -4,25 +4,28 @@ public class ContaInvestimento extends Conta {
 	private double montanteMinimo;
 	private double depositoMinimo;
 	
-	public double getMontanteMinimo() {
-		return montanteMinimo;
-	}
 
-	public double getDepositoMinimo() {
-		return depositoMinimo;
-	}
-
-	public ContaInvestimento(int idConta, TipoConta tipoConta, double montanteMinimo, 
+	   /** 
+	    * Construtor incompleto da classe
+	    */  
+	public ContaInvestimento(int idConta, TipoConta tipoConta, Cliente clienteConta, double montanteMinimo, 
 			double depositoMinimo, double depositoInicial) {
-		super(idConta, tipoConta, depositoInicial);
+		super(idConta, tipoConta, clienteConta, depositoInicial);
 		this.montanteMinimo = montanteMinimo;
 		this.depositoMinimo = depositoMinimo;
 	}
 	
+	   /** 
+	    * Construtor completo
+	    */  
 	public ContaInvestimento(int idConta, TipoConta tipoConta, Cliente clienteConta, double saldo, double depositoInicial) {
 		super(idConta, tipoConta, clienteConta, saldo, depositoInicial);
 	}
 	
+	   /** 
+	    * Método para criar uma Conta Investimento no Banco de Dados
+	    * @param c Objeto conta investimento
+	    */  
 	public static void CriaContaInvestimento(ContaInvestimento c) {
 	Connection con = Conexao.getConexaoMySQL();
 	try {
@@ -44,45 +47,48 @@ public class ContaInvestimento extends Conta {
 		e.printStackTrace();
 	}
 }
-	
+	   /** 
+	    * Método de depósito sobrescrevendo o método da classe pai
+	    * @param valor do depósito
+	    * @return true ou exceção para tratamento de erro específico
+	    */  
 	@Override
     public boolean deposita(double valor) {
     	Connection con = Conexao.getConexaoMySQL();
         valor = valor + super.getSaldo();
-
         if (valor >= depositoMinimo) {
             super.deposita(valor);
-
             return true;
         } else {
-            // To-do: mensagem de erro;
-
-            return false;
+            throw new RuntimeException("Valor abaixo do depósito mínimo da conta");
         }
     }
 
-    @Override
-    public boolean saca(double valor) {
-    	Connection con = Conexao.getConexaoMySQL();
-        valor = super.getSaldo() - valor;
-        if (valor >= montanteMinimo) {
-            super.saca(valor);
-
-            return true;
-        } else {
-            // To-do: mensagem de erro;
-
-            return false;
-        }
-    }
-
-    @Override
-    public void remunera() {
-    	Connection con = Conexao.getConexaoMySQL();
-        double saldo = getSaldo() + ((getSaldo() / 100.0) * 2);
-        super.atualizaSaldo(saldo, super.getCliente().getId());
-        // Aplicar remuneracÌ§aÌƒo de 2% ao saldo da conta.
-    }
+	   /** 
+	    * Método de saque sobrescrevendo o método da classe pai
+	    * @param valor do saque
+	    * @return true ou exceção para tratamento de erro específico
+	    */  
+	@Override
+	public boolean saca(double valor) {
+		double valorFinal = getSaldo()-valor;
+		if (valorFinal < montanteMinimo) {
+			throw new RuntimeException("Valor após o saque nao pode ser menor que o montante minimo");
+		}
+		super.saca(valor);
+		return true;
+	}
+	
+	   /** 
+	    * Método de remuneração da conta conforme regra
+	    */  
+	@Override
+	public void remunera() {
+		double novoValor = getSaldo()*1.02;
+		atualizaSaldo(novoValor, super.getNumero());
+	}
+    
+	/* getters e setters */
 
 	@Override
 	public Cliente getDono() {
@@ -99,5 +105,12 @@ public class ContaInvestimento extends Conta {
 		return super.getSaldo();
 	}
 
+	public double getMontanteMinimo() {
+		return montanteMinimo;
+	}
+
+	public double getDepositoMinimo() {
+		return depositoMinimo;
+	}
 
 }

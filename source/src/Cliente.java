@@ -12,10 +12,9 @@ public class Cliente {
     private String cidade;
     private String endereco;
     private int idConta;
-    
 
 	   /** 
-	    * Construtor para criação do cliente sem ID
+	    * Construtor de um cliente sem ID definido
 	    */
     public Cliente(String nome, String sobrenome, char sexo, String cpf, String rg, 
     		String estado, String cidade, String endereco){
@@ -99,7 +98,8 @@ public class Cliente {
         	}
         	cliente.setId(id);
         	
-            stm = con.prepareStatement("INSERT INTO Cliente VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
+            stm = con.prepareStatement("INSERT INTO Cliente(idCliente, nome, sobrenome, rg, cpf, sexo, estado, cidade, endereco)"
+            		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
             stm.setInt(1, id);
             stm.setString(2, nome);
             stm.setString(3, sobrenome);
@@ -144,6 +144,11 @@ public class Cliente {
 
     }
 
+	   /** 
+	    * Método para consultar um cliente específico no banco de dados, através de seu ID
+	    * @param id da Conta
+	    * @return Objeto cliente
+	    */
     public static Cliente consultarCliente(int id) {
     	Connection con = Conexao.getConexaoMySQL();
     	Statement stm = null;
@@ -170,6 +175,11 @@ public class Cliente {
     	return c;
     }
     
+	   /** 
+	    * Método para consultar um cliente específico no Banco de Dados, através de seu CPF
+	    * @param cpf do cliente
+	    * @return Objeto cliente consultado
+	    */
     public static Cliente consultarCliente(String cpf) {
     	Connection con = Conexao.getConexaoMySQL();
     	Statement stm = null;
@@ -212,6 +222,7 @@ public class Cliente {
     	}
     }
     
+    /* Getters e Setters */
     
     public int getId() {
     	return this.id;

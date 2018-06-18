@@ -3,20 +3,19 @@ import java.sql.*;
 public class ContaCorrente extends Conta {
 	private double limite;
 	
-	public double getLimite() {
-		return limite;
-	}
 
-	public ContaCorrente(int idConta, TipoConta tipoConta, 
-		double depositoInicial, double limite) {
-		super(idConta, tipoConta, depositoInicial);
+	   /** 
+	    * Construtor completo da classe
+	    */  
+	public ContaCorrente(int idConta, TipoConta tipoConta, Cliente clienteConta, double depositoInicial, double limite) {
+		super(idConta, tipoConta, clienteConta, depositoInicial);
 		this.limite = limite;
 	}
 	
-	public ContaCorrente(int idConta, TipoConta tipoConta, Cliente clienteConta, double saldo, double depositoInicial) {
-		super(idConta, tipoConta, clienteConta, saldo, depositoInicial);
-	}
-	
+	   /** 
+	    * Método para criação de uma conta corrente no Banco de Dados
+	    * @param c Objeto conta corrente
+	    */  
 	public static void CriaContaCorrente(ContaCorrente c) {
 	Connection con = Conexao.getConexaoMySQL();
 	try {
@@ -37,36 +36,40 @@ public class ContaCorrente extends Conta {
 		e.printStackTrace();
 	}
 }
-
-
-
+	
+   /** 
+    * Método de saque específico da conta corrente
+    * @param valor do saque
+    * @return true ou exceção para tratamento de erro específico
+    */  
 	@Override
-    public boolean saca(double valor) {
-    	Connection con = Conexao.getConexaoMySQL();
-    	valor = super.getSaldo() - valor;
-        if (valor > limite) {
-            // To-do: Mensagem de erro;
-            return false;
-        } else {
-            super.saca(valor);
-            // To-do: decrementa, limite - valor;
-            return true;
-        }
-    }
-    
+	public boolean saca(double valor) {
+		double valorFinal = getSaldo()-valor;
+		if (valorFinal < limite) {
+			throw new RuntimeException("Valor após o saque não pode ser menor que o limite da conta.");
+		}
+		super.saca(valor);
+		return true;
+	}
+	
+   /** 
+    * Método de remuneração, não utilizado na classe CC porém obrigatório implementar por conta da interface ContaI
+    */  
     @Override
     public void remunera() {
-    	Connection con = Conexao.getConexaoMySQL();
-        double saldo = getSaldo() + (getSaldo() / 100.0);
-        // Aplicar remuneracÌ§aÌƒo de 1% ao saldo da conta.
-        super.atualizaSaldo(saldo, super.getCliente().getId());
+    	// método vazio
     }
 
+    /** 
+     * Método de depósito. Sem regra específica, chama o método da classe pai
+     */  
 	@Override
 	public boolean deposita(double valor) {
 		return super.deposita(valor);
 	}
 
+	
+	/* Getters e setters */
 	@Override
 	public Cliente getDono() {
 		return super.getDono();
@@ -80,6 +83,10 @@ public class ContaCorrente extends Conta {
 	@Override
 	public double getSaldo() {
 		return super.getSaldo();
+	}
+	
+	public double getLimite() {
+		return limite;
 	}
 
 }
