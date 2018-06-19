@@ -26,6 +26,9 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.JRadioButton;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.ButtonGroup;
 
 public class ClientesFrame extends JFrame {
 	private ModeloCliente modelo = new ModeloCliente();
@@ -46,6 +49,9 @@ public class ClientesFrame extends JFrame {
 	private JButton btnAdicionar;
 	private JButton btnRemover;
 	private JButton btnSalvar;
+	private final ButtonGroup buttonGroupOrdenacao = new ButtonGroup();
+	private JTextField textField;
+	private final ButtonGroup buttonGroupPesquisa = new ButtonGroup();
 
 	/**
 	 * Launch the application.
@@ -76,7 +82,7 @@ public class ClientesFrame extends JFrame {
 			}
 		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 731, 558);
+		setBounds(100, 100, 731, 708);
 		contentPane = new JPanel();
 		contentPane.setToolTipText("M");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -146,7 +152,7 @@ public class ClientesFrame extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 
 
-		scrollPane.setBounds(22, 214, 680, 297);
+		scrollPane.setBounds(22, 266, 680, 297);
 		contentPane.add(scrollPane);
 		
 		JLabel lblSexo = new JLabel("Sexo");
@@ -277,6 +283,35 @@ public class ClientesFrame extends JFrame {
 		});
 		btnNovoCliente.setBounds(349, 169, 119, 23);
 		contentPane.add(btnNovoCliente);
+		
+		JRadioButton radioOrdenaNome = new JRadioButton("Nome");
+		buttonGroupOrdenacao.add(radioOrdenaNome);
+		radioOrdenaNome.setBounds(492, 169, 64, 23);
+		contentPane.add(radioOrdenaNome);
+		
+		JRadioButton radioOrdenaSobrenome = new JRadioButton("Sobrenome");
+		buttonGroupOrdenacao.add(radioOrdenaSobrenome);
+		radioOrdenaSobrenome.setBounds(595, 169, 107, 23);
+		contentPane.add(radioOrdenaSobrenome);
+		
+		JLabel lblPesquisar = new JLabel("Pesquisar:");
+		lblPesquisar.setBounds(22, 216, 78, 14);
+		contentPane.add(lblPesquisar);
+		
+		textField = new JTextField();
+		textField.setBounds(85, 213, 330, 20);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JRadioButton radioPesquisaNome = new JRadioButton("Nome");
+		buttonGroupPesquisa.add(radioPesquisaNome);
+		radioPesquisaNome.setBounds(430, 212, 64, 23);
+		contentPane.add(radioPesquisaNome);
+		
+		JRadioButton radioPesquisaCPF = new JRadioButton("CPF");
+		buttonGroupPesquisa.add(radioPesquisaCPF);
+		radioPesquisaCPF.setBounds(504, 212, 53, 23);
+		contentPane.add(radioPesquisaCPF);
 		
 
 	}
