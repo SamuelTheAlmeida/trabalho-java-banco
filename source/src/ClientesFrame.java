@@ -35,6 +35,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.RowSorter;
 import javax.swing.table.*;
 import javax.swing.RowFilter;
+import java.awt.Color;
 
 public class ClientesFrame extends JFrame {
 
@@ -91,8 +92,12 @@ public class ClientesFrame extends JFrame {
 				limparCampos();
 				txtId.setEditable(false);
 			}
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				dispose();
+			}
 		});
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 731, 600);
 		contentPane = new JPanel();
 		contentPane.setToolTipText("M");
@@ -172,6 +177,7 @@ public class ClientesFrame extends JFrame {
 		contentPane.add(lblSexo);
 		
 		comboSexo = new JComboBox();
+		comboSexo.setBackground(new Color(255, 255, 255));
 		comboSexo.setToolTipText("M");
 		comboSexo.setModel(new DefaultComboBoxModel(new String[] {"M", "F"}));
 		comboSexo.setBounds(77, 85, 53, 22);
@@ -183,6 +189,7 @@ public class ClientesFrame extends JFrame {
 		contentPane.add(lblEstado);
 		
 		comboEstado = new JComboBox();
+		comboEstado.setBackground(new Color(255, 255, 255));
 		comboEstado.setModel(new DefaultComboBoxModel(new String[] {"AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"}));
 		comboEstado.setBounds(78, 116, 53, 22);
 		contentPane.add(comboEstado);
@@ -199,11 +206,12 @@ public class ClientesFrame extends JFrame {
 		
 		JLabel lblManterCliente = new JLabel("Manter Cliente");
 		lblManterCliente.setHorizontalAlignment(SwingConstants.CENTER);
-		lblManterCliente.setFont(new Font("Arial", Font.BOLD, 20));
+		lblManterCliente.setFont(new Font("Franklin Gothic Book", Font.BOLD, 20));
 		lblManterCliente.setBounds(22, 12, 680, 20);
 		contentPane.add(lblManterCliente);
 		
 		btnAdicionar = new JButton("Cadastrar");
+		btnAdicionar.setBackground(new Color(255, 255, 255));
 		btnAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
  
@@ -230,6 +238,7 @@ public class ClientesFrame extends JFrame {
 		contentPane.add(btnAdicionar);
 		
 		btnRemover = new JButton("Remover");
+		btnRemover.setBackground(new Color(255, 255, 255));
 		btnRemover.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selecionado != null) {
@@ -247,6 +256,7 @@ public class ClientesFrame extends JFrame {
 		
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.setBackground(new Color(255, 255, 255));
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int id = Integer.parseInt(txtId.getText());
@@ -303,6 +313,7 @@ public class ClientesFrame extends JFrame {
 		table.setBorder(new CompoundBorder());
 		
 		btnNovoCliente = new JButton("Novo Cliente");
+		btnNovoCliente.setBackground(new Color(255, 255, 255));
 		btnNovoCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				limparCampos();
@@ -315,7 +326,8 @@ public class ClientesFrame extends JFrame {
 		contentPane.add(btnNovoCliente);
 		
 		JLabel lblPesquisar = new JLabel("Pesquisar:");
-		lblPesquisar.setBounds(22, 216, 78, 14);
+		lblPesquisar.setFont(new Font("SansSerif", Font.BOLD, 13));
+		lblPesquisar.setBounds(22, 215, 78, 14);
 		contentPane.add(lblPesquisar);
 		
 		txtCampoPesquisa = new JTextField();
@@ -332,7 +344,7 @@ public class ClientesFrame extends JFrame {
 			}
 		});
 
-		txtCampoPesquisa.setBounds(90, 213, 330, 20);
+		txtCampoPesquisa.setBounds(110, 212, 330, 20);
 		contentPane.add(txtCampoPesquisa);
 		txtCampoPesquisa.setColumns(10);
 		
@@ -355,6 +367,12 @@ public class ClientesFrame extends JFrame {
 		buttonGroupOrdenacao.add(radioOrdenaNome);
 		radioOrdenaNome.setBounds(465, 214, 109, 23);
 		contentPane.add(radioOrdenaNome);
+		
+		JLabel lblOrdenarPor = new JLabel("Ordenar por:");
+		lblOrdenarPor.setFont(new Font("SansSerif", Font.BOLD, 13));
+		lblOrdenarPor.setHorizontalAlignment(SwingConstants.CENTER);
+		lblOrdenarPor.setBounds(465, 198, 211, 16);
+		contentPane.add(lblOrdenarPor);
 		
 		//modelo.
 	}
