@@ -1,4 +1,5 @@
 import javax.swing.table.AbstractTableModel;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -10,7 +11,19 @@ public class ModeloCliente extends AbstractTableModel {
 	private static int qtdColunas = 9; // num de colunas da tabela cliente
 	
 	public Cliente getCliente(int row) {
+		Collections.sort(clientes);
 		return clientes.get(row);
+		
+	}
+	
+	public void ordenaNome() {
+		Collections.sort(clientes, new NomeComparator());
+		fireTableDataChanged();
+	}
+	
+	public void ordenaSobrenome() {
+		Collections.sort(clientes, new SobrenomeComparator());
+		fireTableDataChanged();
 	}
 	
 	@Override
@@ -53,6 +66,7 @@ public class ModeloCliente extends AbstractTableModel {
 	public void adicionar(Cliente cliente) {
 		Cliente.adicionarCliente(cliente);
 		clientes.add(cliente);
+		Collections.sort(clientes);
 		fireTableRowsInserted(clientes.size()-1, clientes.size()-1);
 	}
 	

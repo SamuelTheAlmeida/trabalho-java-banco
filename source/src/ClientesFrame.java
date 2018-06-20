@@ -29,9 +29,14 @@ import java.awt.event.FocusEvent;
 import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.ButtonGroup;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.RowSorter;
+import javax.swing.table.*;
+import javax.swing.RowFilter;
 
 public class ClientesFrame extends JFrame {
-	private ModeloCliente modelo = new ModeloCliente();
+
 	private Cliente selecionado = null;
 
 	private JPanel contentPane;
@@ -42,6 +47,13 @@ public class ClientesFrame extends JFrame {
 	private JTextField txtCPF;
 	private JTextField txtId;
 	private JTable table;
+	
+	private ModeloCliente modelo = new ModeloCliente();
+	 TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(modelo);
+	  
+	 
+	          
+	          
 	private JComboBox comboEstado;
 	private JTextField txtEndereco;
 	private JTextField txtCidade;
@@ -50,7 +62,7 @@ public class ClientesFrame extends JFrame {
 	private JButton btnRemover;
 	private JButton btnSalvar;
 	private final ButtonGroup buttonGroupOrdenacao = new ButtonGroup();
-	private JTextField textField;
+	private JTextField txtCampoPesquisa;
 	private final ButtonGroup buttonGroupPesquisa = new ButtonGroup();
 
 	/**
@@ -82,7 +94,7 @@ public class ClientesFrame extends JFrame {
 			}
 		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 731, 708);
+		setBounds(100, 100, 731, 600);
 		contentPane = new JPanel();
 		contentPane.setToolTipText("M");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -152,7 +164,7 @@ public class ClientesFrame extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 
 
-		scrollPane.setBounds(22, 266, 680, 297);
+		scrollPane.setBounds(22, 244, 680, 297);
 		contentPane.add(scrollPane);
 		
 		JLabel lblSexo = new JLabel("Sexo");
@@ -246,6 +258,7 @@ public class ClientesFrame extends JFrame {
 
 		
 		table = new JTable();
+		table.setRowSorter(sorter);
 
 		scrollPane.setViewportView(table);
 		table.setFillsViewportHeight(true);
@@ -284,36 +297,49 @@ public class ClientesFrame extends JFrame {
 		btnNovoCliente.setBounds(349, 169, 119, 23);
 		contentPane.add(btnNovoCliente);
 		
-		JRadioButton radioOrdenaNome = new JRadioButton("Nome");
-		buttonGroupOrdenacao.add(radioOrdenaNome);
-		radioOrdenaNome.setBounds(492, 169, 64, 23);
-		contentPane.add(radioOrdenaNome);
-		
-		JRadioButton radioOrdenaSobrenome = new JRadioButton("Sobrenome");
-		buttonGroupOrdenacao.add(radioOrdenaSobrenome);
-		radioOrdenaSobrenome.setBounds(595, 169, 107, 23);
-		contentPane.add(radioOrdenaSobrenome);
-		
 		JLabel lblPesquisar = new JLabel("Pesquisar:");
 		lblPesquisar.setBounds(22, 216, 78, 14);
 		contentPane.add(lblPesquisar);
 		
-		textField = new JTextField();
-		textField.setBounds(85, 213, 330, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
-		JRadioButton radioPesquisaNome = new JRadioButton("Nome");
-		buttonGroupPesquisa.add(radioPesquisaNome);
-		radioPesquisaNome.setBounds(430, 212, 64, 23);
-		contentPane.add(radioPesquisaNome);
-		
-		JRadioButton radioPesquisaCPF = new JRadioButton("CPF");
-		buttonGroupPesquisa.add(radioPesquisaCPF);
-		radioPesquisaCPF.setBounds(504, 212, 53, 23);
-		contentPane.add(radioPesquisaCPF);
-		
+		txtCampoPesquisa = new JTextField();
+		txtCampoPesquisa.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String itemPesquisado = "";
+				itemPesquisado = txtCampoPesquisa.getText();
+				if (itemPesquisado.trim().length() == 0) {
+				     sorter.setRowFilter(null);
+				  } else {
+				     sorter.setRowFilter(RowFilter.regexFilter("(?i)" + itemPesquisado));
+				  }
+			}
+		});
 
+		txtCampoPesquisa.setBounds(90, 213, 330, 20);
+		contentPane.add(txtCampoPesquisa);
+		txtCampoPesquisa.setColumns(10);
+		
+		JRadioButton radioOrdenaSobrenome = new JRadioButton("Sobrenome");
+		radioOrdenaSobrenome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				modelo.ordenaSobrenome();
+			}
+		});
+		buttonGroupOrdenacao.add(radioOrdenaSobrenome);
+		radioOrdenaSobrenome.setBounds(593, 214, 109, 23);
+		contentPane.add(radioOrdenaSobrenome);
+		
+		JRadioButton radioOrdenaNome = new JRadioButton("Nome");
+		radioOrdenaNome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				modelo.ordenaNome();
+			}
+		});
+		buttonGroupOrdenacao.add(radioOrdenaNome);
+		radioOrdenaNome.setBounds(465, 214, 109, 23);
+		contentPane.add(radioOrdenaNome);
+		
+		//modelo.
 	}
 	
 	public void limparCampos() {
