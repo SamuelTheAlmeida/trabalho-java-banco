@@ -396,4 +396,5 @@ public class ClientesFrame extends JFrame {
 		txtCidade.setText("");
 		txtEndereco.setText("");
 	}
+	
 }
