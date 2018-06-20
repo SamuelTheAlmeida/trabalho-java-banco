@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -58,19 +60,18 @@ public class VincularContaFrame extends JFrame {
 	 */
 	public VincularContaFrame() {
 		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowOpened(WindowEvent arg0) {
-				comboClientes.setSelectedIndex(0);
-			}
+			//@Override
+			//public void windowOpened(WindowEvent arg0) {
+			//	comboClientes.setSelectedIndex(0);
+			//}
 			@Override
 			public void windowClosed(WindowEvent e) {
 				dispose();
 			}
 		});
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 539, 355);
 		contentPane = new JPanel();
-		contentPane.setBackground(SystemColor.control);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -165,6 +166,9 @@ public class VincularContaFrame extends JFrame {
 				double depositoInicial = Double.parseDouble(txtDepositoInicial.getText());
 				switch(contaSelecionada) {
 				case 1:
+					try {
+						
+					
 					double limite = Double.parseDouble(txtLimite.getText());
 					ContaCorrente contaCorrente = new ContaCorrente(numConta, tipoConta, 
 							cliente, depositoInicial, limite);
@@ -176,19 +180,29 @@ public class VincularContaFrame extends JFrame {
 					}
 					
 					cliente.setIdConta(numConta);
+					JOptionPane.showMessageDialog(getParent(), "Conta vinculada com sucesso");
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(getParent(), "Erro: " + ex.getMessage());
+					}
 					break;
 				case 2:
-					double montanteMinimo = Double.parseDouble(txtMontanteMinimo.getText());
-					double depositoMinimo = Double.parseDouble(txtDepositoMinimo.getText());
-					ContaInvestimento contaInvestimento = new ContaInvestimento(numConta, tipoConta, cliente, montanteMinimo, 
-							depositoMinimo, depositoInicial);
-					contaInvestimento.setDono(cliente);
-					if (Conta.consultarConta(cliente) == null) {
-						ContaInvestimento.CriaContaInvestimento(contaInvestimento);
-					} else {
-						ContaInvestimento.atualizarContaInvestimento(contaInvestimento);
+					try {
+						double montanteMinimo = Double.parseDouble(txtMontanteMinimo.getText());
+						double depositoMinimo = Double.parseDouble(txtDepositoMinimo.getText());
+						ContaInvestimento contaInvestimento = new ContaInvestimento(numConta, tipoConta, cliente, montanteMinimo, 
+								depositoMinimo, depositoInicial);
+						contaInvestimento.setDono(cliente);
+						if (Conta.consultarConta(cliente) == null) {
+							ContaInvestimento.CriaContaInvestimento(contaInvestimento);
+						} else {
+							ContaInvestimento.atualizarContaInvestimento(contaInvestimento);
+						}
+						cliente.setIdConta(numConta);
+						JOptionPane.showMessageDialog(getParent(), "Conta vinculada com sucesso");
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(getParent(), "Erro: "+ ex.getMessage());
 					}
-					cliente.setIdConta(numConta);
+
 					break;
 				}
 				inicializaCampos();

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class ModeloCliente extends AbstractTableModel {
 	private List<Cliente> clientes = Cliente.buscarClientes();
-	private static int qtdColunas = 9; // num de colunas da tabela cliente
+	private static int qtdColunas = 10; // num de colunas da tabela cliente
 	
 	public Cliente getCliente(int row) {
 		return clientes.get(row);
@@ -57,6 +57,8 @@ public class ModeloCliente extends AbstractTableModel {
 			return cliente.getCidade();
 		case 8:
 			return cliente.getEndereco();
+		case 9:
+			return cliente.getIdConta();
 		default:
 			return "";
 		}
@@ -69,13 +71,20 @@ public class ModeloCliente extends AbstractTableModel {
 	}
 	
 	public void remover(Cliente cliente) {
-		Conta conta = Conta.consultarConta(cliente);
-		if (conta.getTipoConta().getIdTipoConta() == 1) {
-			ContaCorrente.excluirContaCorrente(cliente.getIdConta());
-		} else if (conta.getTipoConta().getIdTipoConta() == 2)
-		{
-			ContaInvestimento.excluirContaInvestimento(cliente.getIdConta());
+		System.out.println("idConta: " + cliente.getIdConta());
+		if (cliente.getIdConta() > 0) {
+			System.out.println("Cliente com conta.");
+			Conta conta = Conta.consultarConta(cliente);
+			System.out.println("Conta id: " + conta.getNumero());
+			if (conta.getTipoConta().getIdTipoConta() == 1) {
+				System.out.println("Tipo conta 1: " + conta.getTipoConta().getIdTipoConta());
+				ContaCorrente.excluirContaCorrente(cliente.getIdConta());
+			} else if (conta.getTipoConta().getIdTipoConta() == 2) {
+				System.out.println("Tipo conta 2: " + conta.getTipoConta().getIdTipoConta());
+				ContaInvestimento.excluirContaInvestimento(cliente.getIdConta());
+			}
 		}
+		System.out.println("Chamando excluirCliente");
 		Cliente.excluirCliente(cliente.getId());
 		clientes.remove(cliente);
 		fireTableRowsDeleted(clientes.size()-1, clientes.size()-1);
@@ -109,6 +118,8 @@ public class ModeloCliente extends AbstractTableModel {
 			return "Cidade";
 		case 8:
 			return "Endereco";
+		case 9:
+			return "idConta";
 		default:
 			return "";
 		}

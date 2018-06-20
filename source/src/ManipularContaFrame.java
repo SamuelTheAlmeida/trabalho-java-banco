@@ -62,7 +62,7 @@ public class ManipularContaFrame extends JFrame {
 				
 			}
 		});
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 422, 278);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -90,8 +90,13 @@ public class ManipularContaFrame extends JFrame {
 		btnVerSaldo.setBackground(new Color(255, 255, 255));
 		btnVerSaldo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				double saldo = contaSelecionada.getSaldo();
-				JOptionPane.showMessageDialog(getParent(), "Saldo atual é de " + saldo);
+				try {
+					double saldo = contaSelecionada.getSaldo();
+					JOptionPane.showMessageDialog(getParent(), "Saldo atual é de " + saldo);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(getParent(), "Erro: " + ex.getMessage());
+				}
+				
 			}
 		});
 		btnVerSaldo.setBounds(68, 194, 123, 23);
@@ -102,9 +107,9 @@ public class ManipularContaFrame extends JFrame {
 		btnSaque.setBackground(new Color(255, 255, 255));
 		btnSaque.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String input = JOptionPane.showInputDialog("Digite o valor a ser sacado: ");
-				double valor = Double.parseDouble(input);
 				try {
+					String input = JOptionPane.showInputDialog("Digite o valor a ser sacado: ");
+					double valor = Double.parseDouble(input);
 					contaSelecionada.saca(valor);
 					JOptionPane.showMessageDialog(getParent(), "Saque efetuado com sucesso");
 				} catch (Exception e) {
@@ -120,9 +125,9 @@ public class ManipularContaFrame extends JFrame {
 		btnDeposito.setBackground(new Color(255, 255, 255));
 		btnDeposito.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String input = JOptionPane.showInputDialog("Digite o valor a ser depositado: ");
-				double valor = Double.parseDouble(input);
 				try {
+					String input = JOptionPane.showInputDialog("Digite o valor a ser depositado: ");
+					double valor = Double.parseDouble(input);
 					contaSelecionada.deposita(valor);
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(getParent(), ex.getMessage());
@@ -139,11 +144,17 @@ public class ManipularContaFrame extends JFrame {
 		btnRemunerar.setBackground(new Color(255, 255, 255));
 		btnRemunerar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (contaSelecionada.getTipoConta().getIdTipoConta() == 1) {
-					JOptionPane.showMessageDialog(getParent(), "A conta não é uma Conta Investimento.");
-				} else {
-					contaSelecionada.remunera();
+				try {
+					if (contaSelecionada.getTipoConta().getIdTipoConta() == 1) {
+						JOptionPane.showMessageDialog(getParent(), "A conta não é uma Conta Investimento.");
+					} else {
+						contaSelecionada.remunera();
+					}
+					
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(getParent(), "Erro");
 				}
+
 				
 			}
 		});
@@ -185,7 +196,12 @@ public class ManipularContaFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				comboCpfCliente.setSelectedIndex(0);
+				try {
+					comboCpfCliente.setSelectedIndex(0);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(getParent(), "Sem clientes cadastrados.");
+				}
+				
 			}
 		});
 		

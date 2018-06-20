@@ -20,7 +20,7 @@ public class ContaCorrente extends Conta {
 	Connection con = Conexao.getConexaoMySQL();
 	try {
 		PreparedStatement stm = con.prepareStatement("INSERT INTO Conta(idConta, tipoConta, cliente, depositoInicial, saldo) "
-				+ "VALUES (?, ?, ?, ?)");
+				+ "VALUES (?, ?, ?, ?, ?)");
 		stm.setInt(1, c.getNumero());
 		stm.setInt(2, c.getTipoConta().getIdTipoConta());
 		stm.setInt(3, c.getCliente().getId());
@@ -60,7 +60,7 @@ public class ContaCorrente extends Conta {
 	public static void atualizarContaCorrente(ContaCorrente contaCorrente){
 		Connection con = Conexao.getConexaoMySQL();
 		try {
-	  	PreparedStatement stm = con.prepareStatement("UPDATE ContaCorrente SET limite = ?  WHERE idCliente = ?");	
+	  	PreparedStatement stm = con.prepareStatement("UPDATE ContaCorrente SET limite = ?  WHERE idConta = ?");	
 	  	stm.setDouble(1, contaCorrente.getLimite());
 	  	stm.setInt(2, contaCorrente.getNumero());
 	  	stm.executeUpdate();

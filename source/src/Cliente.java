@@ -44,6 +44,24 @@ public class Cliente{
         this.endereco = endereco;
     }
     
+    /** 
+	    * Construtor para criação do cliente com ID da conta
+	    */
+    public Cliente(int id, String nome, String sobrenome, char sexo, String cpf, String rg, 
+    		String estado, String cidade, String endereco, int idConta){
+    	this.id = id;
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.sexo = sexo;
+        this.rg = rg;
+        this.cpf = cpf;
+        this.estado = estado;
+        this.cidade = cidade;
+        this.endereco = endereco;
+        this.idConta = idConta;
+    }
+    
+    
 	   /** 
 	    * Método para buscar todos os clientes cadastrados no BD. 
 	    * @return Retorna um ArrayList contendo todos os clientes.
@@ -53,7 +71,7 @@ public class Cliente{
     	Connection con = Conexao.getConexaoMySQL();
     	try {
     		Statement stm = con.createStatement();
-        	ResultSet rs = stm.executeQuery("SELECT idCliente, nome, sobrenome, sexo, cpf, rg, estado, cidade, endereco FROM Cliente");
+        	ResultSet rs = stm.executeQuery("SELECT idCliente, nome, sobrenome, sexo, cpf, rg, estado, cidade, endereco, idConta FROM Cliente");
         	while (rs.next()) {
         		int id = rs.getInt(1);
         		String nome = rs.getString(2);
@@ -64,7 +82,8 @@ public class Cliente{
         		String estado = rs.getString(7);
         		String cidade = rs.getString(8);
         		String endereco = rs.getString(9);
-        		Cliente c = new Cliente(id, nome, sobrenome, sexo, rg, cpf, estado, cidade, endereco);
+        		int idConta = rs.getInt(10);
+        		Cliente c = new Cliente(id, nome, sobrenome, sexo, rg, cpf, estado, cidade, endereco, idConta);
         		clientes.add(c);
         	}
     	} catch (SQLException e) {
@@ -110,9 +129,7 @@ public class Cliente{
             stm.setString(8, cidade);
             stm.setString(9, endereco);
             stm.executeUpdate();
-            System.out.println("top");
         } catch (SQLException e) {
-        	System.out.println("deu ruim");
         	System.out.println(e.getMessage());
         	e.printStackTrace();
         	System.out.println(stm);

@@ -237,6 +237,34 @@ public class ClientesFrame extends JFrame {
 		btnAdicionar.setBounds(22, 169, 91, 23);
 		contentPane.add(btnAdicionar);
 		
+		table = new JTable();
+		table.setRowSorter(sorter);
+
+		scrollPane.setViewportView(table);
+		table.setFillsViewportHeight(true);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				btnAdicionar.setEnabled(false);
+				btnSalvar.setEnabled(true);
+				btnRemover.setEnabled(true);
+				Cliente c = modelo.getCliente(table.getSelectedRow());
+				txtId.setText(Integer.toString(c.getId()));
+				txtNome.setText(c.getNome());
+				txtSobrenome.setText(c.getSobrenome());
+				comboSexo.setSelectedItem(String.valueOf(c.getSexo()));
+				txtCPF.setText(c.getCpf());
+				txtRG.setText(c.getRg());
+				comboEstado.setSelectedItem(c.getEstado());
+				txtCidade.setText(c.getCidade());
+				txtEndereco.setText(c.getEndereco());
+				selecionado = c;
+			}
+
+		});
+		table.setModel(modelo);
+		table.setBorder(new CompoundBorder());
+		
 		btnRemover = new JButton("Remover");
 		btnRemover.setBackground(new Color(255, 255, 255));
 		btnRemover.addActionListener(new ActionListener() {
@@ -244,7 +272,8 @@ public class ClientesFrame extends JFrame {
 				if (selecionado != null) {
 					int op = JOptionPane.showConfirmDialog(getParent(), "Se o cliente possuir uma conta, ela será também apagada. "
 							+ "Deseja confirmar a exclusão?");
-					if (op == 1) {
+					System.out.println("op =" + op);
+					if (op == 0) {
 						modelo.remover(selecionado);
 						limparCampos();
 					}
@@ -284,33 +313,7 @@ public class ClientesFrame extends JFrame {
 		
 
 		
-		table = new JTable();
-		table.setRowSorter(sorter);
 
-		scrollPane.setViewportView(table);
-		table.setFillsViewportHeight(true);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				btnAdicionar.setEnabled(false);
-				btnSalvar.setEnabled(true);
-				btnRemover.setEnabled(true);
-				Cliente c = modelo.getCliente(table.getSelectedRow());
-				txtId.setText(Integer.toString(c.getId()));
-				txtNome.setText(c.getNome());
-				txtSobrenome.setText(c.getSobrenome());
-				comboSexo.setSelectedItem(String.valueOf(c.getSexo()));
-				txtCPF.setText(c.getCpf());
-				txtRG.setText(c.getRg());
-				comboEstado.setSelectedItem(c.getEstado());
-				txtCidade.setText(c.getCidade());
-				txtEndereco.setText(c.getEndereco());
-				selecionado = c;
-			}
-
-		});
-		table.setModel(modelo);
-		table.setBorder(new CompoundBorder());
 		
 		btnNovoCliente = new JButton("Novo Cliente");
 		btnNovoCliente.setBackground(new Color(255, 255, 255));

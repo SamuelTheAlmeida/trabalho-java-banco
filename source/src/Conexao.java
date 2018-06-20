@@ -54,6 +54,7 @@ public class Conexao {
 		fecharConexao();
 		return getConexaoMySQL();	
 	}
+
 	
 	public static void main(String args[]) {
 //		Connection conn = getConexaoMySQL();
@@ -74,4 +75,6 @@ public class Conexao {
 //		}
 //		if (fecharConexao()) System.out.println("conexao fechada.");
 	}
+	
+	
 }
