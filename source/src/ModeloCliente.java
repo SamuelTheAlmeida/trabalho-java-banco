@@ -11,7 +11,6 @@ public class ModeloCliente extends AbstractTableModel {
 	private static int qtdColunas = 9; // num de colunas da tabela cliente
 	
 	public Cliente getCliente(int row) {
-		Collections.sort(clientes);
 		return clientes.get(row);
 		
 	}
@@ -66,7 +65,6 @@ public class ModeloCliente extends AbstractTableModel {
 	public void adicionar(Cliente cliente) {
 		Cliente.adicionarCliente(cliente);
 		clientes.add(cliente);
-		Collections.sort(clientes);
 		fireTableRowsInserted(clientes.size()-1, clientes.size()-1);
 	}
 	

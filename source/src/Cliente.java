@@ -1,7 +1,7 @@
 import java.sql.*;
 import java.util.*;
 
-public class Cliente implements Comparable<Cliente>{
+public class Cliente{
 	private int id;
 	private String nome;
 	private String sobrenome;
@@ -287,9 +287,4 @@ public class Cliente implements Comparable<Cliente>{
 		
 	}
 
-
-	@Override
-	public int compareTo(Cliente c) {
-		return this.getNome().compareTo(c.getNome());
-	}
 }
