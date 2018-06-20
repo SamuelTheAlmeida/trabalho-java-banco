@@ -47,6 +47,37 @@ public class ContaInvestimento extends Conta {
 		e.printStackTrace();
 	}
 }
+	
+	   /** 
+	    * Método para atualização de uma contaInvestimento no Banco de Dados. Recebe um obj contaInvestimento e substitui no banco.
+	    * @param contaInvestimento
+	    */
+	public static void atualizarContaInvestimento(ContaInvestimento contaInvestimento){
+		Connection con = Conexao.getConexaoMySQL();
+		try {
+	  	PreparedStatement stm = con.prepareStatement("UPDATE ContaInvestimento SET depositoMinimo = ?, montanteMinimo = ?  WHERE idCliente = ?");	
+	  	stm.setDouble(1, contaInvestimento.getDepositoMinimo());
+	  	stm.setDouble(2, contaInvestimento.getMontanteMinimo());
+	  	stm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+    public static void excluirContaInvestimento(int id) {
+    	Connection con = Conexao.getConexaoMySQL();
+    	try {
+        	PreparedStatement stm = con.prepareStatement("DELETE FROM ContaInvestimento WHERE idConta = ?");	
+        	stm.setInt(1, id);
+        	stm.executeUpdate();
+        	stm = con.prepareStatement("DELETE FROM Conta WHERE idConta = ?");
+        	stm.setInt(1, id);
+        	stm.executeUpdate();
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    }
+    
 	   /** 
 	    * Método de depósito sobrescrevendo o método da classe pai
 	    * @param valor do depósito

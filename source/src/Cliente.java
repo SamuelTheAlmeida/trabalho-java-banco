@@ -141,7 +141,6 @@ public class Cliente{
     	} catch (SQLException e) {
     		e.printStackTrace();
     	}
-
     }
 
 	   /** 
@@ -284,7 +283,7 @@ public class Cliente{
 			System.out.println("Erro ao vincular conta");
 			e.printStackTrace();
 		}
-		
 	}
+	
 
 }

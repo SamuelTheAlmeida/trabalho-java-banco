@@ -69,6 +69,13 @@ public class ModeloCliente extends AbstractTableModel {
 	}
 	
 	public void remover(Cliente cliente) {
+		Conta conta = Conta.consultarConta(cliente);
+		if (conta.getTipoConta().getIdTipoConta() == 1) {
+			ContaCorrente.excluirContaCorrente(cliente.getIdConta());
+		} else if (conta.getTipoConta().getIdTipoConta() == 2)
+		{
+			ContaInvestimento.excluirContaInvestimento(cliente.getIdConta());
+		}
 		Cliente.excluirCliente(cliente.getId());
 		clientes.remove(cliente);
 		fireTableRowsDeleted(clientes.size()-1, clientes.size()-1);

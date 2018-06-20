@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JTable;
@@ -50,9 +51,7 @@ public class ClientesFrame extends JFrame {
 	
 	private ModeloCliente modelo = new ModeloCliente();
 	 TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(modelo);
-	  
-	 
-	          
+
 	          
 	private JComboBox comboEstado;
 	private JTextField txtEndereco;
@@ -207,6 +206,7 @@ public class ClientesFrame extends JFrame {
 		btnAdicionar = new JButton("Cadastrar");
 		btnAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+ 
 				String nome = txtNome.getText();
 				String sobrenome = txtSobrenome.getText();
 				char sexo = comboSexo.getSelectedItem().toString().toUpperCase().charAt(0);
@@ -215,9 +215,15 @@ public class ClientesFrame extends JFrame {
 				String estado = comboEstado.getSelectedItem().toString();
 				String cidade = txtCidade.getText();
 				String endereco = txtEndereco.getText();
-				Cliente c = new Cliente(nome, sobrenome, sexo, CPF, RG, estado, cidade, endereco);
-				modelo.adicionar(c);
-				limparCampos();
+				if (nome != null && sobrenome != null & String.valueOf(sexo) != null & CPF != null & RG != null & estado != null
+						& cidade != null & endereco != null) {
+					Cliente c = new Cliente(nome, sobrenome, sexo, CPF, RG, estado, cidade, endereco);
+					modelo.adicionar(c);
+					limparCampos();
+				} else {
+					JOptionPane.showInternalMessageDialog(getParent(), "Digite todos os campos");
+				}
+
 			}
 		});
 		btnAdicionar.setBounds(22, 169, 91, 23);
@@ -226,8 +232,14 @@ public class ClientesFrame extends JFrame {
 		btnRemover = new JButton("Remover");
 		btnRemover.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				modelo.remover(selecionado);
-				limparCampos();
+				if (selecionado != null) {
+					int op = JOptionPane.showConfirmDialog(getParent(), "Se o cliente possuir uma conta, ela será também apagada. "
+							+ "Deseja confirmar a exclusão?");
+					if (op == 1) {
+						modelo.remover(selecionado);
+						limparCampos();
+					}
+				}
 			}
 		});
 		btnRemover.setBounds(238, 169, 91, 23);
@@ -246,10 +258,15 @@ public class ClientesFrame extends JFrame {
 				String estado = comboEstado.getSelectedItem().toString();
 				String cidade = txtCidade.getText();
 				String endereco = txtEndereco.getText();
-				Cliente c = new Cliente(id, nome, sobrenome, sexo, CPF, RG, estado, cidade, endereco);
-				int index = table.getSelectedRow();
-				modelo.atualizar(index, c);
-				limparCampos();
+				if (nome != null && sobrenome != null & String.valueOf(sexo) != null & CPF != null & RG != null & estado != null
+						& cidade != null & endereco != null) {
+					Cliente c = new Cliente(id, nome, sobrenome, sexo, CPF, RG, estado, cidade, endereco);
+					int index = table.getSelectedRow();
+					modelo.atualizar(index, c);
+					limparCampos();
+				} else {
+					JOptionPane.showInternalMessageDialog(getParent(), "Digite todos os campos");
+				}
 			}
 		});
 		btnSalvar.setBounds(130, 169, 91, 23);

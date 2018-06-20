@@ -145,6 +145,19 @@ public class VincularContaFrame extends JFrame {
 				int idCliente = (int)comboClientes.getSelectedItem();
 				clienteSelecionado = Cliente.consultarCliente(idCliente);
 				lblNomeCliente.setText(clienteSelecionado.getNome() + " " + clienteSelecionado.getSobrenome());
+				Conta conta = Conta.consultarConta(clienteSelecionado);
+				int tipo = conta.getTipoConta().getIdTipoConta();
+				if (tipo == 1) {
+					ContaCorrente contaCorrente = (ContaCorrente)conta; 
+					txtDepositoInicial.setText(Double.toString(contaCorrente.getDepositoInicial()));
+					txtLimite.setText(Double.toString(contaCorrente.getLimite()));
+				} else if (tipo == 2) {
+					ContaInvestimento contaInvestimento = (ContaInvestimento)conta; 
+					txtDepositoInicial.setText(Double.toString(contaInvestimento.getDepositoInicial()));
+					txtDepositoMinimo.setText(Double.toString(contaInvestimento.getDepositoMinimo()));
+					txtMontanteMinimo.setText(Double.toString(contaInvestimento.getMontanteMinimo()));
+				}
+				txtDepositoInicial.setEditable(false);
 			}
 		});;
 		ArrayList<Cliente> listaDeClientes = Cliente.buscarClientes();
@@ -204,7 +217,12 @@ public class VincularContaFrame extends JFrame {
 					ContaCorrente contaCorrente = new ContaCorrente(numConta, tipoConta, 
 							cliente, depositoInicial, limite);
 					contaCorrente.setDono(cliente);
-					ContaCorrente.CriaContaCorrente(contaCorrente);
+					if (Conta.consultarConta(cliente) == null) {
+						ContaCorrente.CriaContaCorrente(contaCorrente);
+					} else {
+						ContaCorrente.atualizarContaCorrente(contaCorrente);
+					}
+					
 					cliente.setIdConta(numConta);
 					break;
 				case 2:
@@ -213,7 +231,11 @@ public class VincularContaFrame extends JFrame {
 					ContaInvestimento contaInvestimento = new ContaInvestimento(numConta, tipoConta, cliente, montanteMinimo, 
 							depositoMinimo, depositoInicial);
 					contaInvestimento.setDono(cliente);
-					ContaInvestimento.CriaContaInvestimento(contaInvestimento);
+					if (Conta.consultarConta(cliente) == null) {
+						ContaInvestimento.CriaContaInvestimento(contaInvestimento);
+					} else {
+						ContaInvestimento.atualizarContaInvestimento(contaInvestimento);
+					}
 					cliente.setIdConta(numConta);
 					break;
 				}

@@ -37,6 +37,38 @@ public class ContaCorrente extends Conta {
 	}
 }
 	
+    public static void excluirContaCorrente(int id) {
+    	Connection con = Conexao.getConexaoMySQL();
+    	try {
+        	PreparedStatement stm = con.prepareStatement("DELETE FROM ContaCorrente WHERE idConta = ?");	
+        	stm.setInt(1, id);
+        	stm.executeUpdate();
+        	stm = con.prepareStatement("DELETE FROM Conta WHERE idConta = ?");
+        	stm.setInt(1, id);
+        	stm.executeUpdate();
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    }
+	
+    
+	   /** 
+	    * Método para atualização de uma contaCorrente no Banco de Dados. Recebe um obj contaCorrente e substitui no banco.
+	    * @param contaCorrente
+	    */
+	public static void atualizarContaCorrente(ContaCorrente contaCorrente){
+		Connection con = Conexao.getConexaoMySQL();
+		try {
+	  	PreparedStatement stm = con.prepareStatement("UPDATE ContaCorrente SET limite = ?  WHERE idCliente = ?");	
+	  	stm.setDouble(1, contaCorrente.getLimite());
+	  	stm.setInt(2, contaCorrente.getNumero());
+	  	stm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+
    /** 
     * Método de saque específico da conta corrente
     * @param valor do saque
@@ -88,5 +120,7 @@ public class ContaCorrente extends Conta {
 	public double getLimite() {
 		return limite;
 	}
+	
+
 
 }
