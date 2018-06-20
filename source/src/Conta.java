@@ -201,7 +201,7 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     	double saldo = -1;
     	try {
             Statement stmt = null;
-            String query = "select saldo from conta where idConta =" + this.cliente.getId();
+            String query = "select saldo from conta where idConta =" + this.getNumero();
             stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
