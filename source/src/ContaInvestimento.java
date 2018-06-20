@@ -29,12 +29,13 @@ public class ContaInvestimento extends Conta {
 	public static void CriaContaInvestimento(ContaInvestimento c) {
 	Connection con = Conexao.getConexaoMySQL();
 	try {
-		PreparedStatement stm = con.prepareStatement("INSERT INTO Conta(idConta, tipoConta, cliente, depositoInicial) "
+		PreparedStatement stm = con.prepareStatement("INSERT INTO Conta(idConta, tipoConta, cliente, depositoInicial, saldo) "
 				+ "VALUES (?, ?, ?, ?)");
 		stm.setInt(1, c.getNumero());
 		stm.setInt(2, c.getTipoConta().getIdTipoConta());
 		stm.setInt(3, c.getCliente().getId());
 		stm.setDouble(4, c.getDepositoInicial());
+		stm.setDouble(5, c.getDepositoInicial());
 		stm.executeUpdate();
 		stm = con.prepareStatement("INSERT INTO ContaInvestimento(idConta, montanteMinimo, depositoMinimo)"
 				+ "VALUES(?, ?, ?)");

@@ -31,6 +31,7 @@ public abstract class Conta implements ContaI { // classe abstrata, conta precis
     	this.tipoConta = tipoConta;
     	this.cliente = clienteConta;
     	this.depositoInicial = depositoInicial;
+    	this.saldo = depositoInicial;
     }
 
 

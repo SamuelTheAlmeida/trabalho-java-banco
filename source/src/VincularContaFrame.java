@@ -13,6 +13,8 @@ import javax.swing.DefaultComboBoxModel;
 import java.util.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class VincularContaFrame extends JFrame {
 
@@ -53,8 +55,14 @@ public class VincularContaFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public VincularContaFrame() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent arg0) {
+				comboClientes.setSelectedIndex(0);
+			}
+		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 561, 356);
+		setBounds(100, 100, 561, 385);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -139,42 +147,6 @@ public class VincularContaFrame extends JFrame {
 		lblNomeCliente.setBounds(196, 75, 326, 14);
 		contentPane.add(lblNomeCliente);
 		
-		comboClientes = new JComboBox();
-		comboClientes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int idCliente = (int)comboClientes.getSelectedItem();
-				clienteSelecionado = Cliente.consultarCliente(idCliente);
-				lblNomeCliente.setText(clienteSelecionado.getNome() + " " + clienteSelecionado.getSobrenome());
-				Conta conta = Conta.consultarConta(clienteSelecionado);
-				int tipo = conta.getTipoConta().getIdTipoConta();
-				if (tipo == 1) {
-					ContaCorrente contaCorrente = (ContaCorrente)conta; 
-					txtDepositoInicial.setText(Double.toString(contaCorrente.getDepositoInicial()));
-					txtLimite.setText(Double.toString(contaCorrente.getLimite()));
-				} else if (tipo == 2) {
-					ContaInvestimento contaInvestimento = (ContaInvestimento)conta; 
-					txtDepositoInicial.setText(Double.toString(contaInvestimento.getDepositoInicial()));
-					txtDepositoMinimo.setText(Double.toString(contaInvestimento.getDepositoMinimo()));
-					txtMontanteMinimo.setText(Double.toString(contaInvestimento.getMontanteMinimo()));
-				}
-				txtDepositoInicial.setEditable(false);
-			}
-		});;
-		ArrayList<Cliente> listaDeClientes = Cliente.buscarClientes();
-		for (Cliente cliente : listaDeClientes) {
-			comboClientes.addItem(cliente.getId());
-		}
-
-		
-		comboClientes.setToolTipText("");
-		comboClientes.setBounds(101, 71, 85, 22);
-		contentPane.add(comboClientes);
-		
-		lblTipoContaSelected = new JLabel("");
-		lblTipoContaSelected.setBounds(196, 108, 326, 14);
-		contentPane.add(lblTipoContaSelected);
-		
-		
 		comboTiposConta = new JComboBox();
 		ArrayList<TipoConta> listaDeTiposConta = TipoConta.buscarTiposConta();
 		for (TipoConta tipoConta : listaDeTiposConta) {
@@ -204,6 +176,52 @@ public class VincularContaFrame extends JFrame {
 				}
 			}
 		});;
+		
+		comboClientes = new JComboBox();
+		comboClientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				txtDepositoInicial.setEditable(true);
+				int idCliente = (int)comboClientes.getSelectedItem();
+				clienteSelecionado = Cliente.consultarCliente(idCliente);
+				lblNomeCliente.setText(clienteSelecionado.getNome() + " " + clienteSelecionado.getSobrenome());
+				Conta conta = Conta.consultarConta(clienteSelecionado);
+				
+				if (conta != null) {
+					comboTiposConta.setEnabled(false);
+					txtNumeroConta.setText(String.valueOf(conta.getNumero()));
+					int tipo = conta.getTipoConta().getIdTipoConta();
+					txtDepositoInicial.setEditable(false);
+					if (tipo == 1) {
+						ContaCorrente contaCorrente = (ContaCorrente)conta; 
+						txtDepositoInicial.setText(Double.toString(contaCorrente.getDepositoInicial()));
+						txtLimite.setText(Double.toString(contaCorrente.getLimite()));
+					} else if (tipo == 2) {
+						ContaInvestimento contaInvestimento = (ContaInvestimento)conta; 
+						txtDepositoInicial.setText(Double.toString(contaInvestimento.getDepositoInicial()));
+						txtDepositoMinimo.setText(Double.toString(contaInvestimento.getDepositoMinimo()));
+						txtMontanteMinimo.setText(Double.toString(contaInvestimento.getMontanteMinimo()));
+					}
+				} else {
+					inicializaCampos();
+				}
+
+				
+			}
+		});;
+		ArrayList<Cliente> listaDeClientes = Cliente.buscarClientes();
+		for (Cliente cliente : listaDeClientes) {
+			comboClientes.addItem(cliente.getId());
+		}
+
+		
+		comboClientes.setToolTipText("");
+		comboClientes.setBounds(101, 71, 85, 22);
+		contentPane.add(comboClientes);
+		
+		lblTipoContaSelected = new JLabel("");
+		lblTipoContaSelected.setBounds(196, 108, 326, 14);
+		contentPane.add(lblTipoContaSelected);
+		
 		
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
@@ -239,6 +257,7 @@ public class VincularContaFrame extends JFrame {
 					cliente.setIdConta(numConta);
 					break;
 				}
+				inicializaCampos();
 				
 			}
 		});
@@ -256,5 +275,10 @@ public class VincularContaFrame extends JFrame {
 		int numeroConta = Conta.getNumeracaoConta();
 		txtNumeroConta.setText(String.valueOf(numeroConta));
 		txtNumeroConta.setEditable(false);
+		txtDepositoInicial.setText("");
+		txtLimite.setText("");
+		txtDepositoMinimo.setText("");
+		txtMontanteMinimo.setText("");
+		comboTiposConta.setEnabled(true);
 	}
 }
